@@ -1,4 +1,5 @@
 const searchText = () => {
+  spinner("visible");
   const searchInput = document.getElementById("city_name");
   const searchCity = searchInput.value;
   if (searchCity == "") {
@@ -6,15 +7,16 @@ const searchText = () => {
     error.innerText = "You have entire empty search";
     error.style.textTransform = "Capitalize";
     document.getElementById("weather-wrapper").textContent = "";
+    spinner("hidden");
   } else {
     loadData(searchCity);
     searchInput.value = "";
+    document.getElementById("error-message").textContent = "";
     document.getElementById("weather-wrapper").textContent = "";
   }
 };
 
 const loadData = (searchCity) => {
-  console.log("clicked");
   const key = `8e9b2f45032975fb6b7ceee4d90c36ef`;
   const url = `https://api.openweathermap.org/data/2.5/weather?q=${searchCity}&appid=${key}&units=metric`;
   fetch(url)
@@ -27,6 +29,7 @@ const displayResult = (weather) => {
     const error = document.getElementById("error-message");
     error.innerText = weather.message;
     error.style.textTransform = "Capitalize";
+    spinner("hidden");
   } else {
     console.log(weather);
     console.log("weather", weather.weather[0].icon);
@@ -40,5 +43,9 @@ const displayResult = (weather) => {
     <h1 class="lead">${weather.weather[0].main}</h1>
     `;
     weatherWrapper.appendChild(weatherInfo);
+    spinner("hidden");
   }
 };
+
+const spinner = (displaySpinner) =>
+  (document.getElementById("loader").style.visibility = displaySpinner);
